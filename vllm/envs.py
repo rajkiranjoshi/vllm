@@ -250,6 +250,8 @@ if TYPE_CHECKING:
     VLLM_MEMORY_PROFILER_ESTIMATE_CUDAGRAPHS: bool = False
     VLLM_NIXL_EP_MAX_NUM_RANKS: int = 32
     VLLM_XPU_ENABLE_XPU_GRAPH: bool = False
+    VLLM_GPU_NIC_PCIE_MAPPING: str = ""
+    VLLM_NIC_SELECTION_VARS: str = ""
 
 
 def get_default_cache_root():
@@ -1665,6 +1667,17 @@ environment_variables: dict[str, Callable[[], Any]] = {
     # Enable simple KV offload.
     "VLLM_USE_SIMPLE_KV_OFFLOAD": lambda: bool(
         int(os.getenv("VLLM_USE_SIMPLE_KV_OFFLOAD", "0"))
+    ),
+    # Comma-separated GPU_BDF=NIC_BDF pairs for RDMA NIC selection.
+    # Must be set together with VLLM_NIC_SELECTION_VARS.
+    "VLLM_GPU_NIC_PCIE_MAPPING": lambda: os.getenv(
+        "VLLM_GPU_NIC_PCIE_MAPPING", ""
+    ),
+    # Comma-separated list of env vars to set from the GPU-NIC mapping.
+    # Each entry is VAR_NAME or VAR_NAME:<suffix> (suffix appended to
+    # RDMA device name). Must be set together with VLLM_GPU_NIC_PCIE_MAPPING.
+    "VLLM_NIC_SELECTION_VARS": lambda: os.getenv(
+        "VLLM_NIC_SELECTION_VARS", ""
     ),
 }
 

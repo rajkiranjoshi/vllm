@@ -16,6 +16,7 @@ from vllm.platforms import current_platform
 from vllm.utils.network_utils import get_distributed_init_method, get_ip, get_open_port
 from vllm.v1.core.sched.output import GrammarOutput, SchedulerOutput
 from vllm.v1.executor.abstract import Executor
+from vllm.v1.executor.vllm_net_devices import set_worker_net_device
 from vllm.v1.outputs import AsyncModelRunnerOutput, DraftTokenIds, ModelRunnerOutput
 from vllm.v1.serial_utils import run_method
 from vllm.v1.worker.worker_base import WorkerWrapperBase
@@ -36,6 +37,9 @@ class UniProcExecutor(Executor):
             is_driver_worker=True,
             shared_worker_lock=Lock(),
         )
+
+        # Set net device env vars for the worker if VLLM_GPU_NIC_PCIE_MAPPING is set
+        set_worker_net_device(local_rank, self.vllm_config)
 
         self.async_output_thread: ThreadPoolExecutor | None = None
         if self.max_concurrent_batches > 1:

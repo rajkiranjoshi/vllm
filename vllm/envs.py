@@ -1670,15 +1670,11 @@ environment_variables: dict[str, Callable[[], Any]] = {
     ),
     # Comma-separated GPU_BDF=NIC_BDF pairs for RDMA NIC selection.
     # Must be set together with VLLM_NIC_SELECTION_VARS.
-    "VLLM_GPU_NIC_PCIE_MAPPING": lambda: os.getenv(
-        "VLLM_GPU_NIC_PCIE_MAPPING", ""
-    ),
+    "VLLM_GPU_NIC_PCIE_MAPPING": lambda: os.getenv("VLLM_GPU_NIC_PCIE_MAPPING", ""),
     # Comma-separated list of env vars to set from the GPU-NIC mapping.
     # Each entry is VAR_NAME or VAR_NAME:<suffix> (suffix appended to
     # RDMA device name). Must be set together with VLLM_GPU_NIC_PCIE_MAPPING.
-    "VLLM_NIC_SELECTION_VARS": lambda: os.getenv(
-        "VLLM_NIC_SELECTION_VARS", ""
-    ),
+    "VLLM_NIC_SELECTION_VARS": lambda: os.getenv("VLLM_NIC_SELECTION_VARS", ""),
 }
 
 
